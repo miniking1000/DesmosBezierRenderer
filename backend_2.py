@@ -388,3 +388,4 @@ if __name__ == '__main__':
                 G.new_table({x: numbers, y: times})  # where x, y = G.x, G.y, OR
 
         app.run(port=port)
+

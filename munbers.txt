@@ -3,3 +3,6 @@ export FLUSK_RUN_PORT=5001
 first frame = 37352 lines
 python3 backend_2.py -d -g -f single -e jpg --maxpblock 1000 --port 5001   (or 5000)
 python3 backend_2.py -d -g -e png --maxpblock 1000 --port 5001   (or 5000)
+
+
+# local file to not forget something important

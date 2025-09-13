@@ -1,7 +1,7 @@
 import os
 import shutil
 import time
-
+#seeing this, it was probably written by GPT. I don't remember tho
 SOURCE_DIR = r"C:\Users\vane4\Downloads"
 DEST_DIR = os.path.join(SOURCE_DIR, "framesss")
 
@@ -24,3 +24,4 @@ def move_matching_frames():
 if __name__ == "__main__":
     print("📂 Watching for downloaded frames...")
     move_matching_frames()
+

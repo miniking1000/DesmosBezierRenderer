@@ -10,3 +10,4 @@ for image in images:
     video.write(cv2.imread(os.path.join(image_folder, image)))
 cv2.destroyAllWindows()
 video.release()
+

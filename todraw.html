@@ -1,0 +1,22 @@
+<body style="background-color:#2A2A2A;" marginwidth="0px" marginheight="0px">
+<script src="https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+<div id="calculator"></div>
+<script>
+	var elt = document.getElementById("calculator");
+	var calculator = Desmos.GraphingCalculator(elt);
+	calculator.setExpression({
+		latex: 'f(x)=1.7 \\cdot 10^{-6} x^{2}',
+		id: '0',
+	});
+	calculator.setExpression({
+		type: 'table',
+		columns: [{
+			latex: 'x',
+			values: ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+		}, {
+			latex: 'y',
+			values: ['0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0'],
+		}],
+		id: '1',
+	});
+</script>

@@ -1,0 +1,86 @@
+<script src="https://www.desmos.com/api/v1.3/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+<html lang='en'>
+   <head>
+      <title>Desmos | Graphing Calculator</title>
+      <link rel='icon' href='https://www.desmos.com/favicon.ico'>
+   </head>
+   <div id="calculator" style="width: 100%; height: 100%;"></div>
+   <script>
+        var elt = document.getElementById('calculator');
+        var calculator = Desmos.GraphingCalculator(elt);
+    
+        function changeGraph(key, latex, frame) {
+            calculator.setExpression( { id: 'frame', latex: 'f=' + (frame + 1) } );
+            while (key > 0) {
+                calculator.removeExpression({ id: 'expr-' + key });
+                key--;
+            }
+            for (var expr of latex) {
+                console.log(expr);
+                key++;
+                calculator.setExpression({ id: 'expr-' + key, latex: expr.latex, color: expr.color });
+            }
+            return key;
+        }
+
+        xhr = new XMLHttpRequest();
+        const interval = setInterval(() => { // Attempt backend connection
+            xhr.open('GET', `http://127.0.0.1:5000/init`);
+            xhr.send();
+        }, 1000);
+
+        xhr.onload = () => { // Setup when backend connects successfully
+            clearInterval(interval);
+            var latex = JSON.parse(xhr.response);
+            var height = latex.height;
+            var width = latex.width;
+            var total_frames = latex.total_frames;
+
+            var lastFrame = parseInt(sessionStorage.getItem('lastFrame')) || 0;
+
+            calculator.setExpression({ id: 'frame', latex: `f=0`, color: '#2464b4', sliderBounds: { step: 1, max: total_frames, min: 0 } });
+            if (lastFrame != 0) { // This is a refresh
+                const viewport = JSON.parse(sessionStorage.getItem('viewport'));
+                sessionStorage.removeItem('viewport');
+                calculator.setViewport([viewport.xmin, viewport.xmax, viewport.ymin, viewport.ymax]);
+                renderFrame(lastFrame);
+            } else { // This is the first time loading the page
+                var f = calculator.HelperExpression({ latex: 'f' });
+                f.observe('numericValue', () => {
+                    if (Number.isNaN(f.numericValue) || f.numericValue <= 0) return;
+                    f.unobserve('numericValue');
+                    setTimeout(() => renderFrame(--f.numericValue), 3000); // Wait for additional keystrokes
+                });
+            }
+        }
+   
+        function renderFrame(frame) {
+            var key = 0;
+            var top = 0;
+            var bottom = 0;
+
+            var latex;
+   
+            const interval = setInterval(function() {
+                if (frame < top) {
+                    key = changeGraph(key, latex.result[frame - bottom], frame);
+                    frame++;
+                } else {
+                    xhr = new XMLHttpRequest();
+                    xhr.open("GET", `http://127.0.0.1:5000/?frame=${frame}`);
+                    xhr.send();
+                    xhr.onload = function(e) {
+                        latex = JSON.parse(xhr.response);
+                        if (latex.result === null)
+                            clearInterval(interval);
+                        console.log(latex.result[0])
+                        bottom = frame;
+                        top += latex.number_of_frames;
+                    }
+                }
+
+            }, 1000);
+       }
+   
+   </script>
+</html>
